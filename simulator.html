@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050812">
+  <title>Vector Systems Lab — VECTOR//WORLD</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body class="sim-page">
+  <div class="scanlines"></div>
+  <nav class="topbar">
+    <a class="brand" href="index.html"><span class="brand-mark">V<span>_</span></span><span>VECTOR<span class="brand-slash">//</span>WORLD</span></a>
+    <div class="nav-meta"><span class="status-light"></span> SIMULATION RUNNING <span class="nav-divider">/</span> <a href="index.html">EXIT LAB ↗</a></div>
+  </nav>
+
+  <main class="workspace">
+    <header class="workspace-heading">
+      <div><div class="eyebrow"><span class="pulse-line"></span> RESEARCH MODULE / SPATIAL VECTOR ANALYSIS</div><h1>VECTOR <span class="gradient-text">SYSTEMS LAB</span></h1><p>Configure geometry, manipulate vector components, and inspect the result in 3D space.</p></div>
+      <div class="system-readout"><span>ENGINE</span><strong>THREE.JS / WEBGL</strong><span class="system-divider"></span><span>COORDINATE MODE</span><strong>RIGHT-HANDED XYZ</strong></div>
+    </header>
+
+    <div class="lab-grid">
+      <section class="viewport-panel">
+        <div class="panel-heading"><span><i class="live-dot"></i> LIVE 3D VIEWPORT</span><span id="renderStatus">BOOTING ENGINE...</span></div>
+        <div id="scene-container"><div class="loading-label">INITIALIZING SPATIAL ENGINE...</div><div class="viewport-hud hud-top-left">CAM <b id="cameraReadout">AUTO-FIT</b><br>PROJECTION <b>PERSPECTIVE</b></div><div class="viewport-hud hud-top-right">OBJECT <b id="objectReadout">CUBE_01</b><br>WORLD <b>XYZ / 3D</b></div><div class="viewport-hud hud-bottom">DRAG TO ORBIT <span>•</span> SCROLL TO ZOOM <span>•</span> RIGHT-CLICK TO PAN</div></div>
+        <div class="viewport-toolbar">
+          <div class="axis-legend"><span><i class="axis-x"></i>X AXIS</span><span><i class="axis-y"></i>Y AXIS</span><span><i class="axis-z"></i>Z AXIS</span><span><i class="axis-vector"></i>VECTOR</span></div>
+          <div class="view-actions"><button id="autoFrame" class="tool-button">◎ AUTO FRAME</button><button id="toggleMotion" class="tool-button primary-tool">▶ RUN MOTION</button><button id="resetAll" class="tool-button">↺ RESET</button></div>
+        </div>
+      </section>
+
+      <aside class="control-panel">
+        <div class="panel-heading"><span>PARAMETER CONTROL</span><span>INPUT / 01</span></div>
+        <section class="control-section shape-section">
+          <div class="section-heading"><span class="section-number">00</span><div><h2>GEOMETRY SELECTOR</h2><p>Choose the object rendered in the viewport</p></div></div>
+          <label class="field-label" for="shapeSelect">ACTIVE MESH</label>
+          <select id="shapeSelect" class="shape-select">
+            <option value="cube">01 / CUBE — BOX GEOMETRY</option>
+            <option value="sphere">02 / SPHERE — UV GEOMETRY</option>
+            <option value="cone">03 / CONE — CONE GEOMETRY</option>
+            <option value="torus">04 / TORUS — RING GEOMETRY</option>
+            <option value="octahedron">05 / OCTAHEDRON — POLYHEDRON</option>
+            <option value="icosahedron">06 / ICOSAHEDRON — POLYHEDRON</option>
+            <option value="cylinder">07 / CYLINDER — CYLINDER GEOMETRY</option>
+          </select>
+          <div class="shape-note" id="shapeDescription">Six faces. A classic primitive used to demonstrate position in 3D space.</div>
+        </section>
+
+        <section class="control-section">
+          <div class="section-heading"><span class="section-number">01</span><div><h2>POSITION VECTOR</h2><p>Object coordinates / world space</p></div></div>
+          <div class="slider-row"><label for="xSlider"><b class="x-label">X</b> Horizontal</label><output id="xValue">0.0</output></div><input id="xSlider" type="range" min="-5" max="5" step="0.1" value="0">
+          <div class="slider-row"><label for="ySlider"><b class="y-label">Y</b> Vertical</label><output id="yValue">1.0</output></div><input id="ySlider" type="range" min="0" max="5" step="0.1" value="1">
+          <div class="slider-row"><label for="zSlider"><b class="z-label">Z</b> Depth</label><output id="zValue">0.0</output></div><input id="zSlider" type="range" min="-5" max="5" step="0.1" value="0">
+          <div class="vector-readout"><span>POSITION VECTOR / P</span><strong id="positionDisplay">(0.0, 1.0, 0.0)</strong><small>Magnitude <b id="positionMagnitude">1.00</b> units</small></div>
+        </section>
+
+        <section class="control-section">
+          <div class="section-heading"><span class="section-number">02</span><div><h2>DIRECTION VECTOR</h2><p>Orientation / normalized heading</p></div></div>
+          <div class="slider-row"><label for="dxSlider"><b class="x-label">X</b> Direction X</label><output id="dxValue">1.0</output></div><input id="dxSlider" type="range" min="-1" max="1" step="0.1" value="1">
+          <div class="slider-row"><label for="dySlider"><b class="y-label">Y</b> Direction Y</label><output id="dyValue">0.0</output></div><input id="dySlider" type="range" min="-1" max="1" step="0.1" value="0">
+          <div class="slider-row"><label for="dzSlider"><b class="z-label">Z</b> Direction Z</label><output id="dzValue">0.0</output></div><input id="dzSlider" type="range" min="-1" max="1" step="0.1" value="0">
+          <div class="vector-readout direction-readout"><span>DIRECTION VECTOR / D</span><strong id="directionDisplay">(1.0, 0.0, 0.0)</strong><small>Input magnitude <b id="directionMagnitude">1.00</b></small></div>
+        </section>
+      </aside>
+    </div>
+
+    <section class="telemetry-grid">
+      <article class="telemetry-card"><div class="telemetry-title">POSITION MAGNITUDE <span>‖P‖</span></div><strong id="magnitudeBig">1.00 <small>UNITS</small></strong><p>Distance between the origin and the object's position.</p><code>√(x² + y² + z²)</code></article>
+      <article class="telemetry-card"><div class="telemetry-title">VELOCITY <span>v = ΔP / Δt</span></div><strong id="velocityBig">0.00 <small>UNITS/S</small></strong><p>Rate at which the object's position changes.</p><code>Displacement ÷ elapsed time</code></article>
+      <article class="telemetry-card telemetry-explain"><div class="telemetry-title">SYSTEM ANALYSIS <span class="analysis-live">LIVE DATA</span></div><p id="explanation">The object is at (0.0, 1.0, 0.0). Change the position controls to move it through the coordinate system.</p><div class="formula-bar">P = xî + yĵ + zk̂ <span>// POSITION IN 3D SPACE</span></div></article>
+    </section>
+  </main>
+  <footer class="site-footer"><span>VECTOR//WORLD — INTERACTIVE MATH PRESENTATION</span><span>SPATIAL ENGINE / BUILD 02.6</span></footer>
+  <script type="module" src="simulator.js"></script>
+</body>
+</html>
